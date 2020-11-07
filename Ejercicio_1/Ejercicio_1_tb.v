@@ -64,10 +64,10 @@ $finish;
 end
 
 
-//initial begin
-// $dumpfile("Ejercicio_1_tb.vcd");
-//  $dumpvars(0,Ejercicio_1_tb);
-//end
+initial begin
+ $dumpfile("Ejercicio_1_tb.vcd");
+  $dumpvars(0,Ejercicio_1_tb);
+end
 
 
 
