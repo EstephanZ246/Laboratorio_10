@@ -6,7 +6,7 @@ reset_Fetch,enable_Fetch;
 
 input wire [11:0] direccion;
 output wire [7:0] Program_Byte;
-output wire [3:0] Instr,Oprnd
+output wire [3:0] Instr,Oprnd;
 
 wire [11:0] PC;
 
@@ -14,7 +14,7 @@ wire [11:0] PC;
 
 Program_counter P1(clk_PC, reset_PC, enable_PC, load_PC, direccion, PC);
 Program_ROM P2(PC,Program_Byte);
-Fetch p3(clk_Fetch,reset_Fetch, Program_Byte, Instr, Oprnd);
+Fetch p3(clk_Fetch,reset_Fetch,enable_Fetch, Program_Byte, Instr, Oprnd);
 
 endmodule
 
@@ -50,6 +50,21 @@ assign OUT = memory[direccion];
 endmodule
 ////////////////////// Fetch como un flip-flop
 
+
+module FFD(input wire clk,
+           input wire reset,
+           input wire enable,
+           input wire D,
+           output reg Q);
+
+  always @(posedge clk or posedge reset or posedge enable)
+    begin
+      if (reset) Q <= 1'b0;
+      else if (enable) Q <= D;
+      else Q <= Q;
+    end
+
+endmodule
 /// configuración del flip-flop
 
 module flip_flop(clk,reset,enable,D,Q);
@@ -75,15 +90,15 @@ module Fetch(clk,reset,enable,D,comando,fetch);
 
 input wire clk,reset,enable;
 input wire [7:0] D;
-output wire [3:0] comando, operando;
+output wire [3:0] comando, fetch;
 
 FFD F1(clk, reset, enable, D[7], comando[3]);
 FFD F2(clk, reset, enable, D[6], comando[2]);
 FFD F3(clk, reset, enable, D[5], comando[1]);
 FFD F4(clk, reset, enable, D[4], comando[0]);
 
-FFD F5(clk, reset, enable, D[3], comando[3]);
-FFD F6(clk, reset, enable, D[2], comando[2]);
-FFD F7(clk, reset, enable, D[1], comando[1]);
-FFD F8(clk, reset, enable, D[0], comando[0]);
+FFD F5(clk, reset, enable, D[3], fetch[3]);
+FFD F6(clk, reset, enable, D[2], fetch[2]);
+FFD F7(clk, reset, enable, D[1], fetch[1]);
+FFD F8(clk, reset, enable, D[0], fetch[0]);
 endmodule
