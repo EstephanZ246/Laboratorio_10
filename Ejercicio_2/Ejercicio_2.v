@@ -41,9 +41,9 @@ always @(posedge Entrada or posedge operacion or posedge acumulador)
 
 begin
 casez(operacion)
-3'b000: salida <= Entrada ; // dejar pasar accu
+3'b000: salida = acumulador ; // dejar pasar accu
 3'b001: salida = acumulador - Entrada;// resta
-3'b010: salida <= Entrada;//  dejar pasar data_bus
+3'b010: salida = Entrada;//  dejar pasar data_bus
 3'b011: salida = acumulador + Entrada;// Suma
 3'b100: salida = ~(acumulador & Entrada);// NAND
 3'b000: z = 1'b1;
@@ -63,7 +63,8 @@ reg [3:0] almacen1;
 always @(posedge enable or posedge clk)
 begin
 if (almacen) almacen1 = entrada;
-else if (enable) salida = almacen1;
+else if (enable) salida = almacen;
+
 end
 
 endmodule
